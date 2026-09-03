@@ -1,6 +1,6 @@
 """
 End-to-End Multimodal Biosignal Processing Pipeline for SentinelSense.
-SIH 2026 Problem Statement 26186.
+Supports: ECG, EMG, EOG, EEG, SpO2, and Actigraphy.
 """
 
 import os
@@ -9,7 +9,7 @@ from typing import Dict, Any
 
 from .csv_parser import parse_and_validate_csv
 from .edf_parser import parse_edf_file
-from .signal_cleaner import clean_ecg_signal, clean_emg_signal, clean_eog_signal
+from .signal_cleaner import clean_ecg_signal, clean_emg_signal, clean_eog_signal, clean_eeg_signal
 from .hrv_analyzer import compute_hrv_metrics
 from .spo2_analyzer import analyze_spo2
 from .motion_analyzer import compute_motion_metrics
@@ -38,18 +38,20 @@ def process_biosignal_file(file_path: str, scenario_tag: str = None) -> Dict[str
     ecg_raw = channels["ecg"]
     emg_raw = channels["emg"]
     eog_raw = channels["eog"]
+    eeg_raw = channels.get("eeg", np.zeros_like(ecg_raw))
     spo2_raw = channels["spo2"]
     
     ecg_clean = clean_ecg_signal(ecg_raw, fs=fs)
     emg_clean = clean_emg_signal(emg_raw, fs=fs)
     eog_clean = clean_eog_signal(eog_raw, fs=fs)
+    eeg_clean = clean_eeg_signal(eeg_raw, fs=fs)
     
     # 3. Motion & Restlessness
     motion_results = compute_motion_metrics(
-        acc_x=channels["acc_x"],
-        acc_y=channels["acc_y"],
-        acc_z=channels["acc_z"],
-        motion_mag_raw=channels["motion"],
+        acc_x=channels.get("acc_x"),
+        acc_y=channels.get("acc_y"),
+        acc_z=channels.get("acc_z"),
+        motion_mag_raw=channels.get("motion"),
         fs=fs
     )
     motion_arr = motion_results["motion_array"]
@@ -59,6 +61,7 @@ def process_biosignal_file(file_path: str, scenario_tag: str = None) -> Dict[str
         "ecg": ecg_clean,
         "emg": emg_clean,
         "eog": eog_clean,
+        "eeg": eeg_clean,
         "spo2": spo2_raw,
         "motion": motion_arr
     }
@@ -85,7 +88,6 @@ def process_biosignal_file(file_path: str, scenario_tag: str = None) -> Dict[str
     preview_samples = int(preview_duration_sec * fs)
     downsample_factor = max(1, preview_samples // 1200)
     
-    preview_t = np.arange(0, preview_samples, downsample_factor) / fs
     waveform_preview = []
     
     for idx in range(0, preview_samples, downsample_factor):
@@ -96,6 +98,7 @@ def process_biosignal_file(file_path: str, scenario_tag: str = None) -> Dict[str
             "ecg_clean": round(float(ecg_clean[idx]), 3),
             "emg": round(float(emg_clean[idx]), 2),
             "eog": round(float(eog_clean[idx]), 2),
+            "eeg": round(float(eeg_clean[idx]), 2),
             "spo2": round(float(spo2_raw[idx]), 1),
             "motion": round(float(motion_arr[idx]), 3)
         })

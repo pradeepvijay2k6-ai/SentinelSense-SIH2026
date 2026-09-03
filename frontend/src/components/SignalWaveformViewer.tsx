@@ -8,14 +8,14 @@ import {
   Tooltip,
   CartesianGrid
 } from 'recharts';
-import { Activity, Waves, Eye, Droplet, Move, Filter } from 'lucide-react';
+import { Activity, Waves, Eye, Droplet, Move, Filter, Brain } from 'lucide-react';
 import type { WaveformPoint } from '../types';
 
 interface SignalWaveformViewerProps {
   waveform: WaveformPoint[];
 }
 
-type VisibleChannel = 'ecg' | 'emg' | 'eog' | 'spo2' | 'motion';
+type VisibleChannel = 'ecg' | 'emg' | 'eog' | 'eeg' | 'spo2' | 'motion';
 
 export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ waveform }) => {
   const [selectedChannel, setSelectedChannel] = useState<VisibleChannel>('ecg');
@@ -36,7 +36,7 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
       icon: Activity,
       color: '#10b981',
       filterColor: '#06b6d4',
-      description: 'Lead II waveform showing P-QRS-T complexes and respiratory baseline wander removal (0.5-45 Hz)'
+      description: 'Lead II cardiac waveform with Pan-Tompkins QRS detection and 0.5-45 Hz bandpass filtering'
     },
     emg: {
       name: 'Submental Electromyogram (EMG)',
@@ -44,7 +44,7 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
       icon: Waves,
       color: '#a855f7',
       filterColor: '#d946ef',
-      description: 'Chin muscle tone reflecting sleep depth (prominent atonia during REM stage)'
+      description: 'Submental chin muscle tone (motor relaxation baseline & REM muscle atonia detection)'
     },
     eog: {
       name: 'Electrooculogram (EOG)',
@@ -52,7 +52,15 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
       icon: Eye,
       color: '#f59e0b',
       filterColor: '#fbbf24',
-      description: 'Ocular potential detecting slow rolling eye movements (N1) vs rapid eye bursts (REM)'
+      description: 'Ocular potential detecting slow rolling eye movements (N1) vs rapid episodic saccades (REM)'
+    },
+    eeg: {
+      name: 'Electroencephalogram (EEG)',
+      unit: 'µV',
+      icon: Brain,
+      color: '#6366f1',
+      filterColor: '#818cf8',
+      description: 'Cortical electrophysiology isolating Delta slow waves (0.5-2Hz), Sleep Spindles (12-14Hz), and Alpha/Beta rhythms'
     },
     spo2: {
       name: 'Pulse Oximetry (SpO2)',
@@ -60,15 +68,15 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
       icon: Droplet,
       color: '#ef4444',
       filterColor: '#f87171',
-      description: 'Continuous blood oxygen saturation with automated nadir desaturation dip tracking'
+      description: 'Continuous blood oxygen saturation with automated ODI-3% nocturnal desaturation tracking'
     },
     motion: {
-      name: 'Actigraphy / Motion Residual',
+      name: 'Actigraphy / Dynamic Residual',
       unit: 'g',
       icon: Move,
       color: '#38bdf8',
       filterColor: '#60a5fa',
-      description: 'Tri-axial accelerometer dynamic norm measuring nocturnal restlessness and postural shifts'
+      description: 'Tri-axial accelerometer dynamic norm detecting restlessness, posture shifts, and movement arousals'
     }
   };
 
@@ -83,7 +91,7 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
               Medical Officer Telemetry
             </span>
             <h3 className="text-base font-semibold text-white">
-              Multimodal Biosignal Oscilloscope
+              Multimodal Biosignal Oscilloscope (ECG • EMG • EOG • EEG • SpO2)
             </h3>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -93,7 +101,7 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
 
         {/* Channel Selector Pills */}
         <div className="flex flex-wrap items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
-          {(['ecg', 'emg', 'eog', 'spo2', 'motion'] as VisibleChannel[]).map((ch) => {
+          {(['ecg', 'emg', 'eog', 'eeg', 'spo2', 'motion'] as VisibleChannel[]).map((ch) => {
             const cfg = channelConfig[ch];
             const Icon = cfg.icon;
             const isSelected = selectedChannel === ch;
@@ -181,6 +189,8 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
                         <div className="text-purple-300 font-bold">EMG: {pt.emg.toFixed(2)} µV</div>
                       ) : selectedChannel === 'eog' ? (
                         <div className="text-amber-300 font-bold">EOG: {pt.eog.toFixed(2)} µV</div>
+                      ) : selectedChannel === 'eeg' ? (
+                        <div className="text-indigo-300 font-bold">EEG: {pt.eeg ? pt.eeg.toFixed(2) : '0.00'} µV</div>
                       ) : selectedChannel === 'spo2' ? (
                         <div className="text-rose-300 font-bold">SpO2: {pt.spo2.toFixed(1)}%</div>
                       ) : (
@@ -233,6 +243,15 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
                 dot={false}
                 isAnimationActive={false}
               />
+            ) : selectedChannel === 'eeg' ? (
+              <Line
+                type="monotone"
+                dataKey="eeg"
+                stroke="#818cf8"
+                strokeWidth={1.5}
+                dot={false}
+                isAnimationActive={false}
+              />
             ) : selectedChannel === 'spo2' ? (
               <Line
                 type="monotone"
@@ -258,7 +277,7 @@ export const SignalWaveformViewer: React.FC<SignalWaveformViewerProps> = ({ wave
 
       <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400">
         <span>High-resolution downsampled window (~60s telemetry)</span>
-        <span className="font-mono text-cyan-400">QRS Pan-Tompkins Peak Detection Synchronized</span>
+        <span className="font-mono text-cyan-400">QRS Peak Synchronized & EEG Delta/Theta Spectral Decomposition</span>
       </div>
     </div>
   );

@@ -38,6 +38,7 @@ class SignalChannelPoint(BaseModel):
     ecg_clean: float
     emg: float
     eog: float
+    eeg: Optional[float] = 0.0
     spo2: float
     motion: float
 

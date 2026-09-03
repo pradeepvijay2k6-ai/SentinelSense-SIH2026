@@ -8,9 +8,13 @@ import {
   UserPlus,
   Users,
   Shield,
-  Sparkles,
   Zap,
-  Loader2
+  Loader2,
+  Activity,
+  Waves,
+  Eye,
+  Brain,
+  Droplet
 } from 'lucide-react';
 import { api } from '../api/client';
 import type { Personnel, SampleScenario, AnalysisResult } from '../types';
@@ -136,18 +140,64 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12">
-      {/* Hero Title */}
-      <div className="text-center space-y-2 pt-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-950/80 border border-indigo-800 text-indigo-300 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>CAPF Operational Welfare & Fatigue Monitoring System</span>
-        </div>
+      {/* Clean Hero Title */}
+      <div className="text-center pt-4">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
           Multimodal Biosignal Sensor Ingestion
         </h1>
-        <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-          Upload wearable/duty sensor recordings (ECG, EMG, EOG, SpO2, Accelerometer) to run deep learning sleep staging, autonomic stress scoring, and tactical readiness analytics.
-        </p>
+      </div>
+
+      {/* Multimodal Channel Indicators */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-4xl mx-auto">
+        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+          <div className="p-1.5 rounded-lg bg-emerald-950/80 border border-emerald-800/60 text-emerald-400">
+            <Activity className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="font-semibold text-slate-200">ECG</div>
+            <div className="text-[10px] text-slate-400">HRV & Autonomic Tone</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+          <div className="p-1.5 rounded-lg bg-purple-950/80 border border-purple-800/60 text-purple-400">
+            <Waves className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="font-semibold text-slate-200">EMG</div>
+            <div className="text-[10px] text-slate-400">Submental Tone</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+          <div className="p-1.5 rounded-lg bg-amber-950/80 border border-amber-800/60 text-amber-400">
+            <Eye className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="font-semibold text-slate-200">EOG</div>
+            <div className="text-[10px] text-slate-400">REM & Saccades</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+          <div className="p-1.5 rounded-lg bg-indigo-950/80 border border-indigo-800/60 text-indigo-400">
+            <Brain className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="font-semibold text-slate-200">EEG</div>
+            <div className="text-[10px] text-slate-400">Cortical Sleep Rhythm</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs col-span-2 sm:col-span-1">
+          <div className="p-1.5 rounded-lg bg-rose-950/80 border border-rose-800/60 text-rose-400">
+            <Droplet className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="font-semibold text-slate-200">SpO2</div>
+            <div className="text-[10px] text-slate-400">Pulse Oximetry / ODI</div>
+          </div>
+        </div>
       </div>
 
       {errorMessage && (
@@ -260,10 +310,10 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
           <div>
             <h3 className="text-base font-semibold text-white flex items-center gap-2 mb-1">
               <UploadCloud className="w-4 h-4 text-indigo-400" />
-              <span>Upload Physiological Sensor File</span>
+              <span>Upload Multimodal Telemetry Recording</span>
             </h3>
             <p className="text-xs text-slate-400">
-              Supports standard multi-channel CSV (ECG, EMG, EOG, SpO2, Accelerometer) and clinical EDF formats.
+              Compatible with multi-channel telemetry streams (ECG, EMG, EOG, EEG, SpO2, Accelerometer) and clinical EDF standards.
             </p>
           </div>
 

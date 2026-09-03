@@ -1,11 +1,12 @@
 """
 Signal Cleaning and Filtering Module for SentinelSense.
-SIH 2026 Problem Statement 26186.
-
-Includes:
-- Butterworth bandpass filtering (ECG, EMG, EOG)
-- 50 Hz powerline notch filter
-- Baseline wander removal and detrending
+Multimodal physiological biosignal processing:
+- ECG (Electrocardiogram)
+- EMG (Electromyogram)
+- EOG (Electrooculogram)
+- EEG (Electroencephalogram - Delta, Theta, Alpha, Beta band preservation)
+- SpO2 (Pulse Oximetry)
+- 50 Hz powerline notch filter & baseline wander removal
 """
 
 import numpy as np
@@ -70,3 +71,15 @@ def clean_eog_signal(eog_raw, fs=100.0):
         return eog_raw
     eog_clean = butter_bandpass_filter(eog_raw, lowcut=0.2, highcut=15.0, fs=fs, order=2)
     return eog_clean
+
+def clean_eeg_signal(eeg_raw, fs=100.0):
+    """
+    Cleaning chain for EEG (C3/C4 / Fpz-Cz):
+    Bandpass 0.5 - 35.0 Hz + 50Hz powerline notch.
+    Preserves Delta (0.5-4Hz), Theta (4-8Hz), Alpha (8-12Hz), and Beta (12-30Hz) rhythms.
+    """
+    if len(eeg_raw) < int(fs * 2):
+        return eeg_raw
+    eeg_clean = notch_filter(eeg_raw, freq=50.0, fs=fs, quality_factor=30.0)
+    eeg_clean = butter_bandpass_filter(eeg_clean, lowcut=0.5, highcut=35.0, fs=fs, order=3)
+    return eeg_clean

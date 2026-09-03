@@ -6,7 +6,6 @@ import { ResultPage } from './pages/ResultPage';
 import { PersonnelHistoryPage } from './pages/PersonnelHistoryPage';
 import { RosterPage } from './pages/RosterPage';
 import { api } from './api/client';
-import { ShieldCheck } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'upload' | 'result' | 'history' | 'roster'>('upload');
@@ -78,28 +77,6 @@ export function App() {
           />
         )}
       </main>
-
-      <footer className="mt-auto border-t border-slate-900 bg-slate-950/80 py-6 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-slate-400 font-semibold">SentinelSense v1.0</span>
-            <span>•</span>
-            <span>Smart India Hackathon 2026 (PS 26186)</span>
-            <span>•</span>
-            <span>Ministry of Home Affairs / CAPF</span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" /> Privacy-by-Design
-            </span>
-            <span>•</span>
-            <span>PyTorch ResNet CWT Staging</span>
-            <span>•</span>
-            <span>Pan-Tompkins HRV</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -23,26 +23,16 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* Logo & Title */}
+          {/* Logo & Name Only */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('upload')}>
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/20">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
                 <Activity className="w-5 h-5 text-cyan-400 animate-pulse" />
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                  SentinelSense
-                </span>
-                <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/50">
-                  SIH 26186
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 font-medium">
-                CAPF Predictive Stress & Sleep Welfare AI
-              </p>
-            </div>
+            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-200 bg-clip-text text-transparent">
+              SentinelSense
+            </span>
           </div>
 
           {/* Navigation Tabs */}
@@ -66,12 +56,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   activeTab === 'result'
                     ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Radio className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
-              <span>Active Report</span>
-            </button>
-          )}
+                }`}
+              >
+                <Radio className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+                <span>Active Report</span>
+              </button>
+            )}
 
             <button
               onClick={() => setActiveTab('roster')}

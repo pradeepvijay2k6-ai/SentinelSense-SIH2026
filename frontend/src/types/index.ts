@@ -30,6 +30,7 @@ export interface WaveformPoint {
   ecg_clean: number;
   emg: number;
   eog: number;
+  eeg?: number;
   spo2: number;
   motion: number;
 }
